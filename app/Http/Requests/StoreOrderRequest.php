@@ -23,11 +23,21 @@ class StoreOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'customer_name' => ['required', 'string', 'max:255'],
-            'customer_email' => ['required', 'email', 'max:255'],
-            'product_name' => ['required', 'string', 'max:255'],
-            'quantity' => ['required', 'integer', 'min:1', 'max:1000'],
-            'unit_price' => ['required', 'numeric', 'decimal:0,2', 'min:0.01'],
+            'customer_name' => [
+                'required', 'string', 'max:150',
+            ],
+            'customer_email' => [
+                'required', 'email', 'max:200',
+            ],
+            'product_name' => [
+                'required', 'string', 'max:255',
+            ],
+            'quantity' => [
+                'required', 'integer', 'min:1', 'max:1000',
+            ],
+            'unit_price' => [
+                'required', 'numeric', 'decimal:0,2', 'min:0.01',
+            ],
         ];
     }
 }

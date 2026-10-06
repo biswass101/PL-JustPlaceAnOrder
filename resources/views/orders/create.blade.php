@@ -3,66 +3,45 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Place an order</title>
-        <style>
-            :root { color-scheme: light; font-family: ui-sans-serif, system-ui, sans-serif; }
-            body { background: #f4f5f7; color: #17202a; margin: 0; }
-            main { margin: 4rem auto; max-width: 38rem; padding: 0 1.25rem; }
-            section { background: #fff; border: 1px solid #dfe3e8; border-radius: .5rem; padding: 2rem; }
-            h1 { margin-top: 0; }
-            form { display: grid; gap: 1rem; }
-            label { display: grid; gap: .35rem; font-weight: 600; }
-            input { border: 1px solid #b8c0cc; border-radius: .25rem; box-sizing: border-box; font: inherit; padding: .7rem; width: 100%; }
-            button { background: #1769aa; border: 0; border-radius: .25rem; color: #fff; cursor: pointer; font: inherit; font-weight: 700; padding: .75rem 1rem; }
-            .errors { background: #fff1f0; border: 1px solid #f0a6a0; color: #8a1c13; margin-bottom: 1rem; padding: .75rem 1rem; }
-            .success { background: #edf8ee; border: 1px solid #9bd0a1; color: #1d5e27; margin-bottom: 1rem; padding: .75rem 1rem; }
-        </style>
+        <title>Place an order | NiloyOrderify</title>
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body>
-        <main>
-            <section>
-                <h1>Place an order</h1>
-                <p>Enter the customer and product details below.</p>
-
-                @if (session('success'))
-                    <div class="success">{{ session('success') }}</div>
-                @endif
-
-                @if ($errors->any())
-                    <div class="errors">
-                        <strong>Please correct the following:</strong>
-                        <ul>
+    <body class="site-shell">
+        <main class="form-page page-width">
+            <nav class="topbar" aria-label="Main navigation">
+                <a class="brand" href="{{ route('home') }}"><span class="brand-mark">N</span><span>NiloyOrderify</span></a>
+                <a class="back-link" href="{{ route('home') }}">&larr; Home</a>
+            </nav>
+            <section class="form-layout">
+                <div class="form-intro reveal reveal-delay-1">
+                    <p class="eyebrow"><span class="eyebrow-dot"></span> New order</p>
+                    <h1>Let&apos;s make it official.</h1>
+                    <p>Just a few details and your order will be on its way.</p>
+                    <div class="form-aside"><span class="aside-number">01</span><span>Everything you enter stays focused on getting this order right.</span></div>
+                </div>
+                <div class="form-panel reveal reveal-delay-2">
+                    <div id="toast-region" class="toast-region" aria-live="polite" aria-atomic="true"></div>
+                    @if ($errors->any())
+                        <div class="server-errors" data-server-errors>
                             @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
+                                <span>{{ $error }}</span>
                             @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('orders.store') }}">
-                    @csrf
-                    <label>
-                        Customer name
-                        <input type="text" name="customer_name" value="{{ old('customer_name') }}" required maxlength="255">
-                    </label>
-                    <label>
-                        Customer email
-                        <input type="email" name="customer_email" value="{{ old('customer_email') }}" required maxlength="255">
-                    </label>
-                    <label>
-                        Product name
-                        <input type="text" name="product_name" value="{{ old('product_name') }}" required maxlength="255">
-                    </label>
-                    <label>
-                        Quantity
-                        <input type="number" name="quantity" value="{{ old('quantity', 1) }}" required min="1" max="1000">
-                    </label>
-                    <label>
-                        Unit price
-                        <input type="number" name="unit_price" value="{{ old('unit_price') }}" required min="0.01" step="0.01">
-                    </label>
-                    <button type="submit">Place order</button>
-                </form>
+                        </div>
+                    @endif
+                    <form method="POST" action="{{ route('orders.store') }}" data-order-form novalidate>
+                        @csrf
+                        <div class="field-grid">
+                            <label class="field"><span>Customer name</span><input type="text" name="customer_name" value="{{ old('customer_name') }}" placeholder="Jane Doe" maxlength="255" autocomplete="name"></label>
+                            <label class="field"><span>Email address</span><input type="email" name="customer_email" value="{{ old('customer_email') }}" placeholder="jane@example.com" maxlength="255" autocomplete="email"></label>
+                        </div>
+                        <label class="field"><span>What are you ordering?</span><input type="text" name="product_name" value="{{ old('product_name') }}" placeholder="e.g. Studio notebook" maxlength="255"></label>
+                        <div class="field-grid">
+                            <label class="field"><span>Quantity</span><input type="number" name="quantity" value="{{ old('quantity', 1) }}" min="1" max="1000" inputmode="numeric"></label>
+                            <label class="field"><span>Unit price <small>USD</small></span><input type="number" name="unit_price" value="{{ old('unit_price') }}" min="0.01" step="0.01" placeholder="0.00" inputmode="decimal"></label>
+                        </div>
+                        <button class="button button-primary button-submit" type="submit">Place order <span aria-hidden="true">&rarr;</span></button>
+                    </form>
+                </div>
             </section>
         </main>
     </body>

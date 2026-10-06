@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Order;
 use Tests\TestCase;
 
 class OrderPlacementTest extends TestCase
@@ -19,8 +20,7 @@ class OrderPlacementTest extends TestCase
             'unit_price' => '12.50',
         ]);
 
-        $response->assertRedirect(route('orders.create'));
-        $response->assertSessionHas('success');
+        $response->assertRedirect(route('orders.success', 1));
         $this->assertDatabaseHas('orders', [
             'customer_email' => 'jane@example.com',
             'product_name' => 'Notebook',
@@ -28,6 +28,22 @@ class OrderPlacementTest extends TestCase
             'total_amount' => '25.00',
             'status' => 'pending',
         ]);
+    }
+
+    public function test_the_success_page_shows_the_saved_order(): void
+    {
+        $order = Order::factory()->create([
+            'customer_name' => 'Jane Doe',
+            'product_name' => 'Notebook',
+            'quantity' => 2,
+            'total_amount' => '25.00',
+        ]);
+
+        $this->get(route('orders.success', $order))
+            ->assertOk()
+            ->assertSee('Order confirmed')
+            ->assertSee('Notebook')
+            ->assertSee('$25.00');
     }
 
     public function test_an_api_order_returns_the_created_order(): void

@@ -2,18 +2,16 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_home_page_redirects_to_order_placement(): void
+    public function test_the_home_page_shows_the_order_call_to_action(): void
     {
         $response = $this->get('/');
 
-        $response->assertRedirect(route('orders.create'));
+        $response->assertOk()
+            ->assertSee('Place an order')
+            ->assertSee(route('orders.create'));
     }
 }
